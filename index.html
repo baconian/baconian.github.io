@@ -1,116 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<title>World Map of Toril</title>
-		<meta charset="utf-8" />
-		<style>
-			html, body {
-				height: 100%;
-				margin: 0;
-				padding: 0;
-			}
-			#map {
-				width:100%;
-				height:100%;
-				color: #CCC;
-				background: #EFEFEF;
-			}
-			span.loading {
-				display: block;
-				text-align: center;
-				font: 300 italic 72px/400px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
-			}
-		</style>
-	</head>
-	<body>
-		<div id="map"><span class="loading">loading tiles...</span></div>
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
-		<script>
+<html><head>
+	
+        <title>Quick Start - Leaflet</title>
+    
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico">
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="">
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    
+    
+        
+    </head>
+    <body>
+    
+    
+    
+    <div id="map" style="width: 100%; height: 100%"></div>
+    <script>
+            // Create variable to hold map element, give initial settings to map
+            var map = L.map('map',{ center: [35.362432, -71.086086], zoom: 6});
+    
+        L.tileLayer('https://baconian.github.io/{z}_{x}_{y}.jpg',{ maxZoom: 7,}).addTo(map);
 
-
-			/*
-			 * = PS_Bramus.GoogleMapsTileCutter Config
-			 * ----------------
-			 */
-
-				var repeatOnXAxis = false; // Do we need to repeat the image on the X-axis? Most likely you'll want to set this to false
-
-
-
-			/*
-			 * Helper function which normalizes the coords so that tiles can repeat across the X-axis (horizontally) like the standard Google map tiles.
-			 * ----------------
-			 */
-
-				function getNormalizedCoord(coord, zoom) {
-					if (!repeatOnXAxis) return coord;
-
-					var y = coord.y;
-					var x = coord.x;
-
-					// tile range in one direction range is dependent on zoom level
-					// 0 = 1 tile, 1 = 2 tiles, 2 = 4 tiles, 3 = 8 tiles, etc
-					var tileRange = 1 << zoom;
-
-					// don't repeat across Y-axis (vertically)
-					if (y < 0 || y >= tileRange) {
-						return null;
-					}
-
-					// repeat across X-axis
-					if (x < 0 || x >= tileRange) {
-						x = (x % tileRange + tileRange) % tileRange;
-					}
-
-					return {
-						x: x,
-						y: y
-					};
-
-				}
-
-
-			/*
-			 * Main Core
-			 * ----------------
-			 */
-
-				window.onload = function() {
-
-					// Define our custom map type
-					var customMapType = new google.maps.ImageMapType({
-						getTileUrl: function(coord, zoom) {
-							var normalizedCoord = getNormalizedCoord(coord, zoom);
-							if(normalizedCoord && (normalizedCoord.x < Math.pow(2, zoom)) && (normalizedCoord.x > -1) && (normalizedCoord.y < Math.pow(2, zoom)) && (normalizedCoord.y > -1)) {
-								return zoom + '_' + normalizedCoord.x + '_' + normalizedCoord.y + '.jpg';
-							} else {
-								return 'empty.jpg';
-							}
-						},
-						tileSize: new google.maps.Size(256, 256),
-						maxZoom: 7,
-						name: 'PS_Bramus.GoogleMapsTileCutter'
-					});
-
-					// Basic options for our map
-					var myOptions = {
-						center: new google.maps.LatLng(0, 0),
-						zoom: 2,
-						minZoom: 0,
-						streetViewControl: false,
-						mapTypeControl: false,
-						mapTypeControlOptions: {
-							mapTypeIds: ["custom"]
-						}
-					};
-
-					// Init the map and hook our custom map type to it
-					var map = new google.maps.Map(document.getElementById('map'), myOptions);
-					map.mapTypes.set('custom', customMapType);
-					map.setMapTypeId('custom');
-
-				}
-		</script>
-
-	</body>
-</html>
+    
+    </script>
+    
+    
+    
+    
+    
+    </body></html>
