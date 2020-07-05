@@ -3,13 +3,23 @@
         <title>Toril World Map</title>
     
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta title="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico">
-        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+        <!-- Load Leaflet from CDN -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="">
         <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+
+        
+
+        
+        
+        <!-- Load Esri Leaflet Geocoder -->
+        <script src="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.css">
     
-    
+        <script src="https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/dist/leaflet-search.src.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/dist/leaflet-search.src.css" />
+        <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
         
     </head>
     <body>
@@ -17,13 +27,194 @@
     
     
     <div id="map" style="width: 100%; height: 100%"></div>
+    <div id="formsearch" style="margin: 0 2em 1em 2em;float:left">
+        <label>Search <input id="textsearch" type="text" value="" /></label>
+    </div>
     <script>
-            // Create variable to hold map element, give initial settings to map
-            var map = L.map('map',{ center: [35.362432, -71.086086], zoom: 6});
-    
-        L.tileLayer('https://baconian.github.io/{z}_{x}_{y}.jpg',{ maxZoom: 7,}).addTo(map);
+        // Create variable to hold map element, give initial settings to map
+        var map = L.map('map',{ center: [35.362432, -71.086086], zoom: 6});
+        var lat, lng;
+
+        map.addEventListener('mousemove', function(ev) {
+        lat = ev.latlng.lat;
+        lng = ev.latlng.lng;
+        });
+
+        document.getElementById("map").addEventListener("contextmenu", function (event) {
+            // Prevent the browser's context menu from appearing
+            event.preventDefault();
+
+            // Add marker
+            // L.marker([lat, lng], ....).addTo(map);
+            alert(lat + ", " + lng);
+
+            return false; // To disable default popup.
+        });
+
+        L.tileLayer('https://baconian.github.io/{z}_{x}_{y}.jpg',{ maxZoom: 8, maxNativeZoom: 7,}).addTo(map);
 
     
+
+        var results = new L.LayerGroup().addTo(map);
+
+        var data = [
+        {
+                "title": "Neverwinter",
+                "loc": [ 39.63107677008366,-71.65283203125001]
+            
+        },
+        {
+                "title": "Waterdeep",
+                "loc": [ 35.951329861522666,-69.04907226562501]
+            
+        },
+        {
+                "title": "Mirabar",
+                "loc": [ 42.956422511073335,-68.58764648437501]
+            
+        },
+        {
+                "title": "Luskan",
+                "loc": [ 41.5579215778042,-72.53173828125001]
+            
+        },
+        {
+                "title": "Baldur's Gate",
+                "loc": [ 28.294707428421205, -65.09399414062501]
+            
+        },
+        {
+                "title": "Athkatla",
+                "loc": [ 22.228090416784486, -64.85229492187501]
+            
+        },
+        {
+                "title": "Darromar",
+                "loc": [ 13.976715394601797, -58.09570312500001]
+            
+        },
+        {
+                "title": "Port Nyanzaru",
+                "loc": [ 9.654907854199024, -72.87231445312501]
+            
+        },
+        {
+                "title": "Calimport",
+                "loc": [ 8.885071663468993, -62.44628906250001]
+            
+        },
+        {
+                "title": "Lyrabar",
+                "loc": [ 29.516110386062277, -31.904296875000004]
+            
+        },
+        {
+                "title": "Phandalin",
+                "loc": [ 38.83114980934874, -70.46630859375001]
+            
+        },
+        {
+                "title": "Leilon",
+                "loc": [ 38.659777730712534, -71.09252929687501]
+            
+        },
+        {
+                "title": "Thindar",
+                "loc": [ -1.3731595449619909, -64.68750000000001]
+            
+        },
+        {
+                "title": "Llorbauth",
+                "loc": [ 19.311143355064655, -49.77905273437501]
+            
+        },
+        {
+                "title": "Daggerford",
+                "loc": [ 34.51560953848204, -67.42309570312501]
+            
+        },
+        {
+                "title": "Halarahh",
+                "loc": [ -4.8282597468669755, -44.384765625]
+            
+        },
+        {
+                "title": "Messemprar",
+                "loc": [ 19.134789188332537, -21.313476562500004]
+            
+        },
+        {
+                "title": "Cimbar",
+                "loc": [ 20.59165212082918, -29.355468750000004]
+            
+        },
+        {
+                "title": "Spandelion",
+                "loc": [ 25.06569718553588, -30.904541015625004]
+            
+        },
+        {
+                "title": "Phlan",
+                "loc": [ 36.29741818650811, -39.77050781250001]
+            
+        },
+        {
+                "title": "Samargol",
+                "loc": [ -1.5488835798473852, -70.400390625000011]
+            
+        },
+        {
+                "title": "Tashluta",
+                "loc": [ 2.28455066023697, -59.94140625000001]
+            
+        },
+        {
+                "title": "Sammarash",
+                "loc": [ 1.5598658653430082, -53.45947265625001]
+            
+        },
+        {
+                "title": "Urbeth",
+                "loc": [ 5.244127581489541, -53.37158203125001]
+            
+        },
+        {
+                "title": "Sheirtalar",
+                "loc": [ 4.444997369727285, -46.69189453125001]
+            
+        },
+        {
+                "title": "Velprintalar",
+                "loc": [ 25.710836919640595, -27.180175781250004]
+            
+        },
+        ]
+        //marker._container.style.visibility = "hidden"
+        
+	    var markersLayer = new L.LayerGroup();	//layer contain searched elements
+        map.addLayer(markersLayer);
+
+
+        var controlSearch = new L.Control.Search({layer: markersLayer, initial: false, position:'topright'});
+
+        map.addControl( controlSearch );
+
+
+        for(i in data) {
+		var title = data[i].title,	//value searched
+			loc = data[i].loc,		//position found
+			marker = new L.Marker(new L.latLng(loc), {title: title} );//se property searched
+		marker.bindPopup(title );
+		markersLayer.addLayer(marker);
+        }
+
+        $('#textsearch').on('keyup', function(e) {
+
+            controlSearch.searchText( e.target.value );
+
+        })
+        
+        setTimeout(function(){$('.pointer').fadeOut('slow');},3400);
     </script>
     
     
